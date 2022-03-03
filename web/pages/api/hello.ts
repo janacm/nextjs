@@ -5,6 +5,7 @@ type Data = {
   name: string
 }
 
+// NextJS API Endpoint Example
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>

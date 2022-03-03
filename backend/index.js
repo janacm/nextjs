@@ -8,6 +8,8 @@ const fastify_1 = __importDefault(require("fastify"));
 const core_1 = require("@mikro-orm/core");
 const Patient_1 = require("./src/entities/Patient");
 const crypto_1 = require("crypto");
+const axios_example_1 = __importDefault(require("./src/axios/axios-example"));
+const axios_vial_1 = __importDefault(require("./src/axios/axios-vial"));
 const server = (0, fastify_1.default)({
     logger: true
 });
@@ -19,6 +21,14 @@ server.get('/ping', async (request, reply) => {
     const patient = new Patient_1.Patient("Janac", "" + (0, crypto_1.randomInt)(100));
     await em.persistAndFlush(patient);
     return 'pong\n';
+});
+server.get('/doaxios', async (request, reply) => {
+    (0, axios_example_1.default)();
+    return 'did axios\n';
+});
+server.get('/patients', async (request, reply) => {
+    (0, axios_vial_1.default)();
+    return 'did axios\n';
 });
 server.listen(8080, (err, address) => {
     log(process.env.DB_NAME);

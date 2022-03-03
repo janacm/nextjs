@@ -17,7 +17,6 @@ const config: Options = {
 
   // debug: true,
   // logger: logger.log.bind(logger), // for NestJS
-  // clientUrl: 'postgresql://postgres:wYhP41fmyYnynZnynmQJ@containers-us-west-29.railway.app:7649/railway', Didn't work
   // debug: process.env.NODE_ENV === "development",
 };
 

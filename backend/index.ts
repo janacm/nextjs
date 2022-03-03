@@ -4,8 +4,8 @@ import {MikroORM} from "@mikro-orm/core";
 import {Patient} from "./src/entities/Patient";
 import {randomInt} from "crypto";
 import {PostgreSqlDriver} from "@mikro-orm/postgresql";
-
-
+import doAxios from "./src/axios/axios-example";
+import getPatient from "./src/axios/axios-vial";
 
 const server = fastify({
     logger: true
@@ -23,6 +23,17 @@ server.get('/ping', async (request, reply) => {
 
     return 'pong\n'
 })
+
+server.get('/doaxios', async (request, reply) => {
+    doAxios()
+    return 'did axios\n'
+})
+
+server.get('/patients', async (request, reply) => {
+    getPatient()
+    return 'did axios\n'
+})
+
 
 server.listen(8080, (err, address) => {
     log(process.env.DB_NAME)
