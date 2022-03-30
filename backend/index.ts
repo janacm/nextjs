@@ -12,16 +12,25 @@ const server = fastify({
 })
 
 
-server.get('/ping', async (request, reply) => {
-
+server.get('/createPatient', async (request, reply) => {
     let orm : MikroORM = await MikroORM.init<PostgreSqlDriver>()
     const em = orm.em.fork();
 
-    if (!em) throw new Error("Entity manager not found. Are you in a 'withORM'-wrapped Context?");
-    const patient = new Patient("Janac", "" +randomInt(100))
+    let val = { birthGender: "female", identifyingGender: "female"};
+    const patient = new Patient("Janac", "" +randomInt(100), val)
     await em.persistAndFlush(patient)
 
-    return 'pong\n'
+    return "created: " + JSON.stringify(patient)
+})
+
+server.get('/patient/:gender', async (request: any) => {
+    let orm : MikroORM = await MikroORM.init<PostgreSqlDriver>()
+    const em = orm.em.fork();
+    return await em.find(Patient, {gender: {
+            birthGender: request.params.gender,
+            identifyingGender: request.params.gender
+        }
+    });
 })
 
 server.get('/doaxios', async (request, reply) => {
@@ -35,7 +44,7 @@ server.get('/patients', async (request, reply) => {
 })
 
 
-server.listen(8080, (err, address) => {
+server.listen(process.env.FASTIFY_SERVER_PORT ? process.env.FASTIFY_SERVER_PORT : 8080, (err, address) => {
     log(process.env.DB_NAME)
     if (err) {
         console.error(err)

@@ -1,7 +1,6 @@
 // const axios = require('axios').default;
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
-
 const ax = axios.create({
     baseURL: "http://localhost:8080"
 })

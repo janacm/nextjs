@@ -13,14 +13,22 @@ const axios_vial_1 = __importDefault(require("./src/axios/axios-vial"));
 const server = (0, fastify_1.default)({
     logger: true
 });
-server.get('/ping', async (request, reply) => {
+server.get('/createPatient', async (request, reply) => {
     let orm = await core_1.MikroORM.init();
     const em = orm.em.fork();
-    if (!em)
-        throw new Error("Entity manager not found. Are you in a 'withORM'-wrapped Context?");
-    const patient = new Patient_1.Patient("Janac", "" + (0, crypto_1.randomInt)(100));
+    let val = { birthGender: "female", identifyingGender: "female" };
+    const patient = new Patient_1.Patient("Janac", "" + (0, crypto_1.randomInt)(100), val);
     await em.persistAndFlush(patient);
-    return 'pong\n';
+    return "created: " + JSON.stringify(patient);
+});
+server.get('/patient/:gender', async (request) => {
+    let orm = await core_1.MikroORM.init();
+    const em = orm.em.fork();
+    return await em.find(Patient_1.Patient, { gender: {
+            birthGender: request.params.gender,
+            identifyingGender: request.params.gender
+        }
+    });
 });
 server.get('/doaxios', async (request, reply) => {
     (0, axios_example_1.default)();
@@ -30,7 +38,7 @@ server.get('/patients', async (request, reply) => {
     (0, axios_vial_1.default)();
     return 'did axios\n';
 });
-server.listen(8080, (err, address) => {
+server.listen(process.env.FASTIFY_SERVER_PORT ? process.env.FASTIFY_SERVER_PORT : 8080, (err, address) => {
     log(process.env.DB_NAME);
     if (err) {
         console.error(err);
